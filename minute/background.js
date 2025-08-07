@@ -1,5 +1,8 @@
 (function() {
+    let lastTick = Date.now();
     const updateClock = () => {
+        const now = Date.now();
+        lastTick = now;
         browser.browserAction.setIcon({
             path: `data:image/svg+xml;base64,${btoa(`
                 <svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'>
@@ -20,5 +23,11 @@
         setTimeout(syncClock, msUntilNextMinute);
     };
 
+    setInterval(() => {
+        const now = Date.now();
+        if (now - lastTick > 1 * 60 * 1000) {
+            syncClock();
+        }
+    }, 30 * 1000);
     syncClock();
 })();
